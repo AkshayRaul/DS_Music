@@ -2,115 +2,38 @@ var express = require('express');
 var app=express();
 var bodyParser = require('body-parser')
 var mongoose = require('mongoose');
-mongoose.connect("mongodb://localhost/taskStore");
+mongoose.connect("mongodb://localhost:27017/Music");
 var db= mongoose.connection;
+var Grid = require('gridfs-stream');
+Grid.mongo = mongoose.mongo;
+var fs = require('fs');
+db.once('open', function () {
+    console.log('open');
+    var gfs = Grid(db.db);
 
-Tasks = require("./models/tasks");
+    // streaming to gridfs
+    //filename to store in mongodb
+    var writestream = gfs.createWriteStream({
+        filename: 'mongo_song.mp3'
+    });
+    fs.createReadStream('/home/akshay/Music/Jab\ Tak\ -\ M.S.\ Dhoni.mp3').pipe(writestream);
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-//app.use(cookieParser());
+    writestream.on('close', function (file) {
+        // do something with `file`
+        console.log(file.filename + 'Written To DB');
+    });
+    var fs_write_stream = fs.createWriteStream('write.mp3');
 
-// Set Static Folder
-app.use(express.static(__dirname + '/public'));
-
-app.use(bodyParser.json());
-
-
-app.get('/api/notes',function(req,res){
-    Tasks.getTasks(function (err,tasks) {
-        if(err){
-            throw err;
-        }
-        console.log("GET:"+tasks);
-        res.json(tasks);
-    })
-});
-
-app.post('/api/task',function(req,res){
-    var task = req.body;
-    console.log(task);
-    Tasks.addTask(task,function (err,task) {
-        if(err){
-            throw err;
-        }
-        console.log("POST:"+task);
-        res.json(task);
+//read from mongodb
+    var readstream = gfs.createReadStream({
+        filename: 'mongo_song.mp3'
+    });
+    readstream.pipe(fs_write_stream);
+    fs_write_stream.on('close', function () {
+        console.log('file has been written fully!');
     });
 });
 
-app.delete('/api/task/:_id',function(req,res){
-    var id = req.params._id;
-    Tasks.removeTask(id,function (err,task) {
-        if(err){
-            throw err;
-        }
-        res.json(task);
-    });
+app.get('/getMusic',function (req,res) {
+   res.json(JSON.stringify({"Hey":"hello"}));
 });
-
-
-app.put('/api/tasks/:_id',function(req,res){
-    var task = req.body;
-    var _id=req.params._id;
-  console.log("Here");
-    console.log(task.title);
-    Tasks.updateTask(_id,task,{},function (err,task) {
-        if(err){
-            throw err;
-        }
-        console.log("success");
-        res.json(task);
-    });
-});
-
-
-app.get('/api/tasks/:_id',function(req,res){
-
-    Tasks.getTaskById(req.params._id,function (err,task) {
-        if(err){
-            throw err;
-        }
-        console.log("GET:"+task);
-        res.json(task);
-    })
-});
-
-
-
-app.post('/api/tasks',function(req,res){
-    var task = req.body;
-
-    Tasks.addTask(task,function (err,task) {
-        if(err){
-            throw err;
-        }
-        res.json(task).pretty();
-    });
-});
-
-app.delete('/api/tasks/:_id',function(req,res){
-    var _id = req.params._id;
-    Tasks.removeTask(_id,function (err,task) {
-        if(err){
-            throw err;
-        }
-        res.json(task);
-    });
-});
-
-
-
-
-app.get('/api/notes/:_id',function(req,res){
-    Tasks.getTaskById(req.params._id,function (err,task) {
-        if(err){
-            throw err;
-        }
-        res.json(task);
-    })
-});
-
-
-app.listen(3000);
-console.log("Serving on port 3000");
