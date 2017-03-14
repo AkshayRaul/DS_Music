@@ -7,6 +7,13 @@ var db= mongoose.connection;
 var Grid = require('gridfs-stream');
 Grid.mongo = mongoose.mongo;
 var fs = require('fs');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(cookieParser());
+
+// Set Static Folder
+app.use(express.static(__dirname + '/public/'));
+/*
 db.once('open', function () {
     console.log('open');
     var gfs = Grid(db.db);
@@ -33,7 +40,16 @@ db.once('open', function () {
         console.log('file has been written fully!');
     });
 });
+*/
 
 app.get('/getMusic',function (req,res) {
-   res.json(JSON.stringify({"Hey":"hello"}));
+    res.header('Access-Control-Allow-Origin','*');
+    res.sendFile('/write.mp3',{root:__dirname});
+});
+app.get('/getMusic1',function (req,res) {
+    res.header('Access-Control-Allow-Origin','*');
+    res.sendFile('/Besabriyaan.mp3',{root:__dirname});
+});
+app.listen(3000,function () {
+        console.log("Listening");
 });

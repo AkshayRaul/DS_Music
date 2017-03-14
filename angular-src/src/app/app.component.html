@@ -1,0 +1,9 @@
+<h1>
+   <div id="aud">
+     {{Song}}
+   </div>
+   <input type="radio" [(ngModel)]='music' name="music" value="http://localhost:3000/getMusic">
+   <input type="radio" [(ngModel)]='music' name="music" value="http://localhost:3000/getMusic1">{{music}}
+
+   <audio preload="auto" controls src="http://localhost:3000/getMusic1"></audio>
+</h1>
