@@ -49,6 +49,7 @@ export class AppComponent implements OnInit{
   ngOnInit(){
     this.getMusic();
     console.log(this.Song);
+    
   }
   getMusic(){
     console.log("adsa");

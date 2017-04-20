@@ -271,16 +271,18 @@
     <div class="container" >                 
                       <div id="waveform"></div>
                       </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
-    <script>
-                               var wavesurfer = WaveSurfer.create({
-                              container: '#aud',
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
+
+   <script>
+                        var wavesurfer = WaveSurfer.create({
+                              container: '#waveform',
                               waveColor: 'violet',
                               progressColor: 'purple'
                             });
+                            console.log("hey");
                             wavesurfer.load('http://localhost:3000/getMusic1');
                             wavesurfer.on('ready', function () {
                             wavesurfer.play();
                         });
-                        });
-                      </script>
+                        
+     </script>
