@@ -10,7 +10,10 @@
   "dependencies": {
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
-    "mongodb": "^2.1.6"
+    "mongodb": "^2.1.6",
+    "socket.io": "^1.7.3"
+  },
+  "devDependencies": {
+    "@angular/cli": "^1.0.0"
   }
 }
-

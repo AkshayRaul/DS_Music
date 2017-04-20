@@ -41,15 +41,34 @@ db.once('open', function () {
     });
 });
 */
-
 app.get('/getMusic',function (req,res) {
     res.header('Access-Control-Allow-Origin','*');
     res.sendFile('/write.mp3',{root:__dirname});
 });
 app.get('/getMusic1',function (req,res) {
     res.header('Access-Control-Allow-Origin','*');
-    res.sendFile('/Besabriyaan.mp3',{root:__dirname});
+    res.sendFile('/guitar1.mp3',{root:__dirname});
 });
 app.listen(3000,function () {
         console.log("Listening");
 });
+
+
+
+
+
+
+//=================================MIDDLE WARE===================================
+// let io = require('socket.io')(http);
+//  io.on('connection', (socket) => { 
+//      console.log('user connected'); 
+//      socket.on('disconnect', function(){ 
+//          console.log('user disconnected'); 
+//         }); 
+//         socket.on('add-message', (message) => { 
+//             io.emit('message', {type:'new-message', text: message}); 
+//         }); 
+//     }); 
+//     http.listen(5000, () => { 
+//         console.log('started on port 5000'); 
+//     });

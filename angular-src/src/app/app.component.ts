@@ -5,8 +5,6 @@ import {Response} from "@angular/http";
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/map';
 
-
-
 @Injectable()
 export class MusicService{
 
@@ -15,7 +13,7 @@ export class MusicService{
     let header=new Headers();
     header.append('Content-type','application/audio'); 
     header.append('Access-Control-Allow-Origin','*'); 
-    return this._http.get('http://localhost:3000/getMusic').map(response=>response.blob);
+    return this._http.get('http://localhost:3000/getMusic1').map(response=>response.blob);
   }
 }
 
