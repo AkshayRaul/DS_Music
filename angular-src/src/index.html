@@ -23,4 +23,29 @@
         <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript">-->
     
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
+
+   <script>
+                        var wavesurfer1 = WaveSurfer.create({
+                              container: '#waveform1',
+                              waveColor: 'violet',
+                              progressColor: 'purple'
+                            });
+                            console.log("hey");
+                            wavesurfer1.load('http://localhost:3000/getMusic1');
+                            wavesurfer1.on('ready', function () {
+                            wavesurfer1.play();
+                        });
+                       var  wavesurfer2 = WaveSurfer.create({
+                              container: '#waveform2',
+                              waveColor: 'blue',
+                              progressColor: 'purple'
+                            });
+                            console.log("hey");
+                            wavesurfer2.load('http://localhost:3000/getMusic');
+                            wavesurfer2.on('ready', function () {
+                            wavesurfer2.play();
+                        });
+                        
+     </script>
 </html>

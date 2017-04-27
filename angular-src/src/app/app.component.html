@@ -9,6 +9,7 @@
     <![endif]-->
 
     <!-- Navigation -->
+    
     <a id="menu-toggle" href="#" class="btn btn-dark btn-lg toggle"><i class="fa fa-bars"></i></a>
     <nav id="sidebar-wrapper">
         <ul class="sidebar-nav">
@@ -40,7 +41,7 @@
             <h1>Distributed Music System</h1>
             <h3>Akshay,Atharva,Prem</h3>
             <br>
-            <a href="#about" class="btn btn-dark btn-lg">Node 1, click to play guitar</a>
+            <a href="#about" class="btn btn-dark btn-lg">Node 2, click to play Drums</a>
         </div>
     </header>
 
@@ -51,13 +52,19 @@
                 <div class="col-lg-12 text-center">
                     <h1>
                       <div id="aud">
-                        {{Song}}
+                       <div id="waveform1"></div>
+                       Pitch:6434Hz
+                      Average Freq:6783hz
                       </div>
                       <!--<input type="radio" [(ngModel)]='music' name="music" value="http://localhost:3000/getMusic">
                       <input type="radio" [(ngModel)]='music' name="music" value="http://localhost:3000/getMusic1">{{music}}-->
 
                       <!--<audio class="audio" preload="auto" controls src="http://localhost:3000/getMusic1"></audio>-->
-                       
+                       <div class="container" >                 
+                            <div id="waveform2"></div>
+                      </div>
+                      Pitch:4424Hz
+                      Average Freq:5623hz
                     </h1>
                 </div>
             </div>
@@ -268,21 +275,5 @@
     
     </script>
 
-    <div class="container" >                 
-                      <div id="waveform"></div>
-                      </div>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
-
-   <script>
-                        var wavesurfer = WaveSurfer.create({
-                              container: '#waveform',
-                              waveColor: 'violet',
-                              progressColor: 'purple'
-                            });
-                            console.log("hey");
-                            wavesurfer.load('http://localhost:3000/getMusic1');
-                            wavesurfer.on('ready', function () {
-                            wavesurfer.play();
-                        });
-                        
-     </script>
+    
+   
