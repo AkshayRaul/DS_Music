@@ -20,8 +20,11 @@
     "@angular/platform-browser": "^2.3.1",
     "@angular/platform-browser-dynamic": "^2.3.1",
     "@angular/router": "^3.3.1",
+    "angular2-websocket-service": "^0.5.3",
     "core-js": "^2.4.1",
+    "queueing-subject": "^0.1.1",
     "rxjs": "^5.0.1",
+    "rxjs-websockets": "^0.8.1",
     "socket.io-client": "^1.7.3",
     "ts-helpers": "^1.1.1",
     "zone.js": "^0.7.2"
