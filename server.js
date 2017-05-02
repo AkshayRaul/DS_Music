@@ -1,5 +1,8 @@
 var express = require('express');
+var http=require('http');
 var app=express();
+const url = require('url');
+const WebSocket = require('ws');
 var bodyParser = require('body-parser')
 var mongoose = require('mongoose');
 mongoose.connect("mongodb://localhost:27017/Music");
@@ -13,6 +16,40 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Set Static Folder
 app.use(express.static(__dirname + '/public/'));
+
+app.get('/getMusic',function (req,res) {
+    res.header('Access-Control-Allow-Origin','*');
+    res.sendFile('/write.mp3',{root:__dirname});
+});
+app.get('/getMusic1',function (req,res) {
+    res.header('Access-Control-Allow-Origin','*');
+    res.header('Content-type','application/audio')
+    
+    res.sendFile('/guitar1.mp3',{root:__dirname});
+});
+app.listen(3000,function () {
+        console.log("Listening");
+});
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', function connection(ws) {
+  const location = url.parse(ws.upgradeReq.url, true);
+  
+  ws.on('message', function incoming(message) {
+    console.log(message);
+  });
+  
+});
+
+server.listen(5000, function listening() {
+  console.log('Listening on %d', server.address().port);
+});
+
+
+
+
+//==================================Database==================================
 /*
 db.once('open', function () {
     console.log('open');
@@ -41,34 +78,4 @@ db.once('open', function () {
     });
 });
 */
-app.get('/getMusic',function (req,res) {
-    res.header('Access-Control-Allow-Origin','*');
-    res.sendFile('/write.mp3',{root:__dirname});
-});
-app.get('/getMusic1',function (req,res) {
-    res.header('Access-Control-Allow-Origin','*');
-    res.sendFile('/guitar1.mp3',{root:__dirname});
-});
-app.listen(3000,function () {
-        console.log("Listening");
-});
-
-
-
-
-
-
-//=================================MIDDLE WARE===================================
-// let io = require('socket.io')(http);
-//  io.on('connection', (socket) => { 
-//      console.log('user connected'); 
-//      socket.on('disconnect', function(){ 
-//          console.log('user disconnected'); 
-//         }); 
-//         socket.on('add-message', (message) => { 
-//             io.emit('message', {type:'new-message', text: message}); 
-//         }); 
-//     }); 
-//     http.listen(5000, () => { 
-//         console.log('started on port 5000'); 
-//     });
+//================================================================================================

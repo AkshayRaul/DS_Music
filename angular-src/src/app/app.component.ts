@@ -8,7 +8,7 @@ import 'rxjs/add/operator/map';
 import * as Rx from 'rxjs/Rx';
 import { QueueingSubject } from 'queueing-subject';
 import { WebSocketService } from 'angular2-websocket-service';
-//  
+
 
 
 @Injectable()
@@ -16,9 +16,9 @@ export class MusicService {
   constructor(public _http: Http) { }
   getMusic(): Observable<any> {
     let header = new Headers();
-    header.append('Content-type', 'application/audio');
-    header.append('Access-Control-Allow-Origin', '*');
-    return this._http.get('http://localhost:3000/getMusic1').map(response => response.blob);
+    header.append('Content-type','application/audio');
+    header.append('Access-Control-Allow-Origin','*');
+    return this._http.get('http://localhost:3000/getMusic1').map(response=>response);
   }
 }
 @Component({
@@ -29,48 +29,85 @@ export class MusicService {
 })
 
 export class AppComponent implements OnInit {
-  audio: string;
-  Song: any;
-  socket: any;
-  private socketSubscription: Subscription;
+  socket:WebSocket;
+  private audioContext: AudioContext;
+  private loadingSample: boolean = true;
+  private audioBufferSource: ArrayBuffer;
+  private audioBuffer: AudioBuffer=null ;
+  private playbackRate: number = 1.0;
+  private gain: number = 1.0;
+  private playButton: Boolean=true;
 
-  constructor(public getmusic: MusicService, ) {
+  constructor(public getmusic: MusicService ) {
 
     this.socket=new WebSocket("ws://localhost:5000");
-    console.log(this.socket.readyState);
-    this.socket.onopen=function(){
-      console.log(this.socket);
-      this.socket.send("gadsa");
-    }
-    this.socket.onmessage=function(message){
-      console.log(message.data);
-    
-    }
-    // Listen for messages
-   
-    this.audio = "http://localhost:3000/getMusic";
-    var audioContext = new AudioContext();
-    var context = new AudioContext(),
-      oscillator = context.createOscillator();
-    var decodemusic;
-    this.getmusic.getMusic().subscribe(response => {
-      decodemusic = response;
+    this.WebSocketCommunication("Hello");
+    this.socket.addEventListener('message', function (event) {
+            console.log('Message from server', event.data);
+        });
+      this.loadingSample = true;
+     
+ }
 
-    });
-    context.decodeAudioData(decodemusic, function (buffer) {
-      // The contents of our mp3 is now an AudioBuffer
-      console.log(buffer);
-    });
-
-    // Connect the oscillator to our speakers
-    oscillator.connect(context.destination);
+  sendBlah(){
+    this.socket.send("Blah");
   }
+
   ngOnInit() {
-    this.getMusic();
+      this.audioContext = new AudioContext();
+      console.log(this.audioContext);
+       this.getmusic.getMusic().subscribe(response=>{
+      this.audioBufferSource=response;
+      console.log(response);
+       if(response._body instanceof ArrayBuffer)
+          console.log("yes")
+       else
+          console.log("no")
+      
+      this.audioContext.decodeAudioData(new ArrayBuffer.apply(response._body) , function(buffer) {
+      console.log(buffer);
+      this.audioBuffer = buffer;
+      this.playSound(buffer);   
+      
+    },this.onError);
+  });
+  
+  
+  }
+
+  onError(){
+    console.log("ERROR!");
+  }
+    playSample() {
+    let bufferSource = this.audioContext.createBufferSource();
+    bufferSource.buffer = this.audioBuffer;
+    //bufferSource.playbackRate.value = this.playbackRate;
+    let gainNode = this.audioContext.createGain();
+    //gainNode.gain.value = this.gain;
+    //console.log("gain"+this.gain);
+    bufferSource.connect(gainNode);
+    gainNode.connect(this.audioContext.destination);
+    bufferSource.start(0);
     
+  }
+  onClick() {
+    console.log("clicked");
+    this.playButton=!this.playButton;
+    this.playSample();
+    this.sendBlah();
   }
   getMusic() {
     console.log("adsa");
 
   }
+  WebSocketCommunication(message){
+    console.log(this.socket.readyState);
+    this.socket.onopen=function(){
+      console.log("Open");
+      //this.send(message);
+    }
+  }
+   
+    
+    
 }

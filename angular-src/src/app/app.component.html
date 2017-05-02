@@ -59,13 +59,31 @@
                       <!--<input type="radio" [(ngModel)]='music' name="music" value="http://localhost:3000/getMusic">
                       <input type="radio" [(ngModel)]='music' name="music" value="http://localhost:3000/getMusic1">{{music}}-->
 
-                      <!--<audio class="audio" preload="auto" controls src="http://localhost:3000/getMusic1"></audio>-->
+                      <audio class="audio" preload="auto" controls src="http://localhost:3000/getMusic1"></audio>
                        <div class="container" >                 
                             <div id="waveform2"></div>
                       </div>
                       Pitch:4424Hz
                       Average Freq:5623hz
                     </h1>
+                    <button class="btn btn-lg btn-light" (click)='onClick()' *ngIf='playButton'>play</button>
+                    <button class="btn btn-lg btn-dark"(click)='onClick()' *ngIf='!playButton'>pause</button>
+                    <div>
+                        <input type='range'
+                                min='0.01'
+                                max='5.0'
+                                step='0.01'
+                                [(ngModel)]='playbackRate'>
+                    </div>
+                    <div>
+                    <label for='gain'>Volume:</label>
+                    <input type='range'
+                            id='gain'
+                            min='0.01'
+                            max='5.0'
+                            step='0.01'
+                            [(ngModel)]='gain'>
+                    </div>
                 </div>
             </div>
             <!-- /.row -->
