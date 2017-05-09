@@ -1,5 +1,5 @@
 import { Component, OnInit, Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Http, Headers , RequestOptions, ResponseContentType} from '@angular/http';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { Response } from "@angular/http";
@@ -14,11 +14,17 @@ import { WebSocketService } from 'angular2-websocket-service';
 @Injectable()
 export class MusicService {
   constructor(public _http: Http) { }
-  getMusic(): Observable<any> {
+  getMusic(): Observable<ArrayBuffer> {
     let header = new Headers();
+    console.log("adsd");
     header.append('Content-type','application/audio');
     header.append('Access-Control-Allow-Origin','*');
-    return this._http.get('http://localhost:3000/getMusic1').map(response=>response);
+    header.append('Accept','*/*');
+    let options = new RequestOptions({responseType: ResponseContentType.ArrayBuffer});
+    console.log(header);
+    return this._http.get('http://localhost:3000/getMusic1',options).map(response=>
+      response.arrayBuffer(),
+    );
   }
 }
 @Component({
@@ -27,7 +33,6 @@ export class MusicService {
   styleUrls: ['./app.component.css']
 
 })
-
 export class AppComponent implements OnInit {
   socket:WebSocket;
   private audioContext: AudioContext;
@@ -37,7 +42,7 @@ export class AppComponent implements OnInit {
   private playbackRate: number = 1.0;
   private gain: number = 1.0;
   private playButton: Boolean=true;
-
+                                    
   constructor(public getmusic: MusicService ) {
 
     this.socket=new WebSocket("ws://localhost:5000");
@@ -54,23 +59,26 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-      this.audioContext = new AudioContext();
+                                                                                                                                                                                                                                                  this.audioContext = new AudioContext();
       console.log(this.audioContext);
-       this.getmusic.getMusic().subscribe(response=>{
-      this.audioBufferSource=response;
-      console.log(response);
-       if(response._body instanceof ArrayBuffer)
-          console.log("yes")
-       else
-          console.log("no")
+      this.getmusic.getMusic().subscribe(respon=>{
+         this.audioBufferSource=respon});
+     console.log(this.audioBufferSource);
+    //    .subscribe(response=>{
+    //   this.audioBufferSource=response;
+    //   console.log(response);
+    //    if(response._body instanceof ArrayBuffer)
+    //       console.log("yes")
+    //    else
+    //       console.log("no")
       
-      this.audioContext.decodeAudioData(new ArrayBuffer.apply(response._body) , function(buffer) {
-      console.log(buffer);
-      this.audioBuffer = buffer;
-      this.playSound(buffer);   
+    //   this.audioContext.decodeAudioData(response , function(buffer) {
+    //   console.log(buffer);
+    //   this.audioBuffer = buffer;
+    //   this.playSound(buffer);   
       
-    },this.onError);
-  });
+    // },this.onError);
+  //});
   
   
   }
@@ -101,7 +109,7 @@ export class AppComponent implements OnInit {
 
   }
   WebSocketCommunication(message){
-    console.log(this.socket.readyState);
+    
     this.socket.onopen=function(){
       console.log("Open");
       //this.send(message);
